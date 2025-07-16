@@ -1,18 +1,29 @@
-# --- STAGE 1: Construir la aplicación Angular ---
-FROM node:22-alpine AS build
+# --- Etapa 1: Compilación de la aplicación Angular ---
+FROM node:20-alpine AS build
+
+# Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
+
+# Copiar package.json y package-lock.json para instalar dependencias
 COPY package.json package-lock.json ./
 
-# Añade esta línea para instalar Angular CLI globalmente en la etapa de build
-RUN npm install -g @angular/cli
+# Instalar las dependencias del proyecto
+RUN npm install
 
-RUN npm ci
+# Copiar el resto del código fuente de la aplicación
 COPY . .
-RUN npm run build -- --configuration production --output-path=dist/browser
 
-# --- STAGE 2: Servir la aplicación con Nginx ---
-FROM nginx:stable-alpine AS production
+# Compilar la aplicación para producción. La salida estará en /app/dist/pallet/browser
+RUN npm run build
+
+# --- Etapa 2: Servir la aplicación con Nginx ---
+FROM nginx:alpine
+
+# Copiar los archivos compilados de la etapa de 'build' al directorio web de Nginx
+COPY --from=build /app/dist/pallet/browser /usr/share/nginx/html
+
+# Copiar el archivo de configuración personalizado de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist/browser /usr/share/nginx/html
+
+# Exponer el puerto 80 para acceder a la aplicación
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,15 @@
+# Archivos de log
+logs
+*.log
+npm-debug.log*
+
+# Dependencias de Node
+node_modules
+
+# Salida de la compilación
+dist
+.angular
+
+# Archivos de configuración de IDEs
+.idea
+.vscode
