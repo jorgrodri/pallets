@@ -1,7 +1,7 @@
 # --- STAGE 1: Construir la aplicación Angular ---
 # Usamos la versión EXACTA de Node.js que tienes en tu PC (22.17.1).
 # 'alpine' es una distribución ligera que reduce el tamaño final de la imagen.
-FROM node:22.17.1-alpine AS build
+FROM node:22-alpine AS build
 
 # Establece el directorio de trabajo dentro del contenedor Docker.
 WORKDIR /app
