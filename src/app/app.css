@@ -1,0 +1,154 @@
+/* Navbar moderno */
+.navbar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1a237e;
+  box-shadow: 0 2px 16px rgba(26, 35, 126, 0.10);
+  padding: 18px 0 8px 0;
+  margin-bottom: 18px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navbar-logo {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  margin-bottom: 8px;
+  background: #fff;
+  display: block;
+  /* Elimino border-radius y box-shadow para imagen cuadrada */
+}
+
+.navbar-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #f4f6fb;
+  font-weight: 600;
+  font-size: 1.1em;
+  padding: 6px 18px;
+  border-radius: 16px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.navbar-links a:hover {
+  background: #2196f3;
+  color: #181c2a;
+}
+
+/* Hero y secciones */
+.hero {
+  background: #fff;
+  border-radius: 32px;
+  box-shadow: 0 8px 40px rgba(26, 35, 126, 0.10);
+  padding: 40px 32px 32px 32px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto 32px auto;
+}
+
+.hero-title {
+  font-size: 2.2em;
+  color: #1a237e;
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.hero-subtitle {
+  font-size: 1.1em;
+  color: #181c2a;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.section {
+  background: #e3e8f7;
+  border-radius: 24px;
+  box-shadow: 0 4px 24px rgba(26, 35, 126, 0.08);
+  max-width: 500px;
+  margin: 0 auto 32px auto;
+  padding: 32px 24px 24px 24px;
+}
+
+.section h2 {
+  color: #1a237e;
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.4em;
+}
+
+.section p {
+  color: #181c2a;
+  font-size: 1.08em;
+  margin-bottom: 0;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 10px 14px;
+  border: 1.5px solid #1a237e;
+  border-radius: 8px;
+  font-size: 1em;
+  background: #fff;
+  color: #181c2a;
+  resize: vertical;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #7a88b6;
+}
+
+.contact-form textarea {
+  min-height: 70px;
+  max-height: 180px;
+}
+
+.contact-form button {
+  background: linear-gradient(90deg, #2196f3 0%, #e3e8f7 100%);
+  color: #1a237e;
+  font-weight: bold;
+  padding: 12px 0;
+  border-radius: 16px;
+  font-size: 1.1em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.contact-form button:hover {
+  background: linear-gradient(90deg, #1a237e 0%, #2196f3 100%);
+  color: #fff;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f4f6fb 0%, #e3e8f7 100%);
+  color: #181c2a;
+  display: block;
+}
