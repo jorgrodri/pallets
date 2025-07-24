@@ -276,3 +276,30 @@ html {
     margin-top: -160px;
   }
 }
+
+@media (max-width: 700px) {
+  .navbar {
+    padding: 16px 0 8px 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .navbar-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 8px;
+  }
+  .navbar-links {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+  }
+  .navbar-links a {
+    width: 90vw;
+    max-width: 320px;
+    text-align: center;
+    font-size: 1.08em;
+    padding: 12px 0;
+    border-radius: 12px;
+  }
+}
