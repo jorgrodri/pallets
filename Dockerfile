@@ -1,29 +1,33 @@
-# --- Etapa 1: Compilación de la aplicación Angular ---
+# Etapa 1: Compilar la aplicación con pnpm
 FROM node:20-alpine AS build
 
-# Establecer el directorio de trabajo dentro del contenedor
+# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar package.json y package-lock.json para instalar dependencias
-COPY package.json package-lock.json ./
+# Instalar pnpm
+RUN npm install -g pnpm
 
-# Instalar las dependencias del proyecto
-RUN npm install
+# Copiar archivos de manifiesto para la caché
+COPY package.json pnpm-lock.yaml ./
 
-# Copiar el resto del código fuente de la aplicación
+# Instalar las dependencias con pnpm
+RUN pnpm install
+
+# Copiar el resto del código fuente
 COPY . .
 
-# Compilar la aplicación para producción. La salida estará en /app/dist/pallet/browser
-RUN npm run build
+# Compilar la aplicación para producción
+# Asumimos que el script de build es 'pnpm run build'
+RUN pnpm run build
 
 # --- Etapa 2: Servir la aplicación con Nginx ---
 FROM nginx:alpine
 
-# Copiar los archivos compilados de la etapa de 'build' al directorio web de Nginx
+# Copiar los archivos compilados de la etapa 'build'
 COPY --from=build /app/dist/pallet/browser /usr/share/nginx/html
 
 # Copiar el archivo de configuración personalizado de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Exponer el puerto 80 para acceder a la aplicación
+# Exponer el puerto 80
 EXPOSE 80
