@@ -4,7 +4,7 @@ FROM oven/bun:latest AS build
 WORKDIR /app
 
 # Copiar archivos de configuración
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 
 # Instalar dependencias
 RUN bun install
