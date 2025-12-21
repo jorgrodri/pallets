@@ -7,7 +7,7 @@ WORKDIR /app
 # Instalamos Bun dentro de Node para mantener la velocidad de instalación
 RUN npm install -g bun
 
-COPY package.json bun.lockb ./
+COPY package.json bun.lock./
 RUN bun install
 
 COPY . .
