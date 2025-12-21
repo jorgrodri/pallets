@@ -2,6 +2,9 @@ FROM oven/bun:1.0 AS base
 
 WORKDIR /app
 
+# Instala herramientas necesarias para dependencias nativas opcionales (como lmdb)
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+
 # Copia los archivos de dependencias y el resto del código
 COPY package.json ./
 COPY bun.lock ./
