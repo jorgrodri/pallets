@@ -1,36 +1,35 @@
-# Etapa 1: Construcción (Build)
+# Etapa 1: Build
 FROM node:20-alpine AS build
 WORKDIR /app
 
-# Instalamos bun para una instalación más rápida de dependencias
+# Instalamos bun para acelerar el proceso
 RUN npm install -g bun
 
-# Copiamos archivos de configuración de dependencias
+# Copiamos archivos de dependencias
 COPY package.json bun.lock* ./
 RUN bun install
 
-# Copiamos todo el código fuente del proyecto
+# Copiamos el resto del código
 COPY . .
 
 # Ejecutamos el build de producción
-# Esto generará los archivos en /app/dist/pallet/browser
 RUN bun run build --configuration=production
 
-# Etapa 2: Servidor de Producción (Nginx)
+# Etapa 2: Producción con Nginx
 FROM nginx:alpine
 
-# 1. Limpiamos el contenido por defecto de Nginx para evitar conflictos
+# Limpiamos la carpeta por defecto de Nginx
 RUN rm -rf /usr/share/nginx/html/*
 
-# 2. Copiamos el contenido de la subcarpeta 'browser' (donde Angular pone el index.html, JS, CSS y el logo)
-# Según tus logs, la ruta exacta es: /app/dist/pallet/browser
+# --- ESTA ES LA RUTA CLAVE ---
+# Angular 18 pone todo en dist/[nombre-proyecto]/browser
+# Según tus logs, tu proyecto se llama 'pallet'
 COPY --from=build /app/dist/pallet/browser /usr/share/nginx/html
 
-# 3. Copiamos tu archivo de configuración de Nginx (para manejar SPA y caché)
+# Copiamos tu configuración de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# 4. PASO CRUCIAL PARA LAS IMÁGENES Y ESTILOS:
-# Ajustamos permisos para que el servidor Nginx (Linux) pueda leer logo.png y el favicon
+# Ajustamos permisos para que los archivos sean legibles
 RUN chmod -R 755 /usr/share/nginx/html && \
     chown -R nginx:nginx /usr/share/nginx/html
 
