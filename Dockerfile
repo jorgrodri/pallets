@@ -2,6 +2,9 @@ FROM oven/bun:1.0 AS base
 
 WORKDIR /app
 
+# Instala herramientas necesarias para node-gyp y dependencias nativas
+RUN apk add --no-cache python3 make g++
+
 # Copia los archivos de dependencias y el resto del código
 COPY package.json ./
 COPY bun.lock ./
