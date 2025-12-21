@@ -1,28 +1,25 @@
-FROM node:20-alpine AS build
+FROM oven/bun:1.0 AS base
 
-# Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar package.json y package-lock.json para instalar dependencias
-COPY package.json package-lock.json ./
-
-# Instalar las dependencias del proyecto
-RUN npm install
-
-# Copiar el resto del código fuente de la aplicación
+# Copia los archivos de dependencias y el resto del código
+COPY package.json ./
+COPY bun.lockb ./
 COPY . .
 
-# Compilar la aplicación para producción. La salida estará en /app/dist/pallet/browser
-RUN npm run build
+# Instala dependencias con Bun
+RUN bun install
 
-# --- Etapa 2: Servir la aplicación con Nginx ---
-FROM nginx:alpine
+# Compila la aplicación Angular
+RUN bun run build
 
-# Copiar los archivos compilados de la etapa de 'build' al directorio web de Nginx
-COPY --from=build /app/dist/pallet/browser /usr/share/nginx/html
+# --- Etapa final: Arranque para Dokploys ---
+FROM oven/bun:1.0-slim
+WORKDIR /app
+COPY --from=base /app .
 
-# Copiar el archivo de configuración personalizado de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Expone el puerto por defecto (ajusta si usas otro)
+EXPOSE 4000
 
-# Exponer el puerto 80 para acceder a la aplicación
-EXPOSE 80
+# Comando de arranque para Dokploys usando Bun
+CMD ["bun", "run", "serve:ssr:pallet"]
