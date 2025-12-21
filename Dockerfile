@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copia los archivos de dependencias y el resto del código
 COPY package.json ./
-COPY bun.lockb ./
+COPY bun.lock ./
 COPY . .
 
 # Instala dependencias con Bun
