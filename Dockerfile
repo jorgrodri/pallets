@@ -1,25 +1,28 @@
-FROM node:20-slim AS build
+# Etapa 1: Build con Bun
+FROM oven/bun:latest AS build
 
 WORKDIR /app
 
-# Copia los archivos de dependencias y el resto del código
-COPY package.json ./
-COPY bun.lock ./
+# Copiar archivos de configuración
+COPY package.json bun.lockb ./
+
+# Instalar dependencias
+RUN bun install
+
+# Copiar el resto del código y compilar
 COPY . .
+RUN bun run build --configuration=production
 
-# Instala dependencias y compila usando Node
-RUN npm install && npm run build
+# Etapa 2: Servidor Nginx para producción
+FROM nginx:alpine
 
-# --- Etapa final: Servir con Bun ---
-FROM oven/bun:1.0-slim
-WORKDIR /app
-COPY --from=build /app .
+# Copiar los archivos compilados desde la etapa anterior
+# Nota: Ajusta 'nombre-de-tu-app' según tu angular.json (dist/nombre-de-tu-app/browser)
+COPY --from=build /app/dist/nombre-de-tu-app/browser /usr/share/nginx/html
 
-# Instala solo las dependencias de producción con Bun (opcional, si usas bun para servir)
-RUN bun install --production
+# Copiar configuración de Nginx para manejar rutas de Angular (SPA)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expone el puerto por defecto (ajusta si usas otro)
-EXPOSE 4000
+EXPOSE 80
 
-# Comando de arranque para Dokploys usando Bun
-CMD ["bun", "run", "serve:ssr:pallet"]
+CMD ["nginx", "-g", "daemon off;"]
