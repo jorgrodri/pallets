@@ -1,25 +1,22 @@
-FROM oven/bun:1.0 AS base
+FROM node:20-slim AS build
 
 WORKDIR /app
-
-# Instala herramientas necesarias para dependencias nativas opcionales (como lmdb)
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 # Copia los archivos de dependencias y el resto del código
 COPY package.json ./
 COPY bun.lock ./
 COPY . .
 
-# Instala dependencias con Bun
-RUN bun install
+# Instala dependencias y compila usando Node
+RUN npm install && npm run build
 
-# Compila la aplicación Angular
-RUN bun run build
-
-# --- Etapa final: Arranque para Dokploys ---
+# --- Etapa final: Servir con Bun ---
 FROM oven/bun:1.0-slim
 WORKDIR /app
-COPY --from=base /app .
+COPY --from=build /app .
+
+# Instala solo las dependencias de producción con Bun (opcional, si usas bun para servir)
+RUN bun install --production
 
 # Expone el puerto por defecto (ajusta si usas otro)
 EXPOSE 4000
