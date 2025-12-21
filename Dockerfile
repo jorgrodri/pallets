@@ -1,28 +1,27 @@
-# Etapa 1: Build con Bun
-FROM oven/bun:latest AS build
+# Usamos Node para el Build porque el CLI de Angular 
+# tiene dependencias nativas que a veces fallan con Bun en el prerendering
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Copiar archivos de configuración
-COPY package.json bun.lock ./
+# Instalamos Bun dentro de Node para mantener la velocidad de instalación
+RUN npm install -g bun
 
-# Instalar dependencias
+COPY package.json bun.lockb ./
 RUN bun install
 
-# Copiar el resto del código y compilar
 COPY . .
+
+# Ejecutamos el build (esto generará dist/browser y dist/server)
 RUN bun run build --configuration=production
 
-# Etapa 2: Servidor Nginx para producción
+# --- Etapa de Producción ---
 FROM nginx:alpine
 
-# Copiar los archivos compilados desde la etapa anterior
-# Nota: Ajusta 'nombre-de-tu-app' según tu angular.json (dist/nombre-de-tu-app/browser)
-COPY --from=build /app/dist/nombre-de-tu-app/browser /usr/share/nginx/html
-
-# Copiar configuración de Nginx para manejar rutas de Angular (SPA)
+# ¡OJO! Revisa la ruta exacta en tu log anterior. 
+# Según tu log, Angular generó los archivos en: /app/dist/pallets/browser
+COPY --from=build /app/dist/pallets/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]
