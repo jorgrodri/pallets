@@ -29,10 +29,10 @@ COPY --from=build /app/dist/pallet/browser /usr/share/nginx/html
 # Copiamos tu configuración de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Ajustamos permisos para que los archivos sean legibles
+# Ajustamos permisos para que los archivos sean legibles 
 RUN chmod -R 755 /usr/share/nginx/html && \
     chown -R nginx:nginx /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"] 
